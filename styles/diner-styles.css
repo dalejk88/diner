@@ -1,3 +1,7 @@
 .btn-primary {
     background-color: darkblue;
 }
+
+img {
+    border-radius: 10px;
+}
