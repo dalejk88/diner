@@ -1,0 +1,12 @@
+{
+  "name": "dkanikkeberg/328/diner",
+  "authors":[
+    {
+      "name": "Dale Kanikkeberg",
+      "email": "dkanikkeberg@student.greenriver.edu"
+    }
+  ],
+  "require":{
+    "bcosca/fatfree-core": "dev-master"
+  }
+}
