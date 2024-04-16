@@ -40,5 +40,34 @@ $f3->route('GET /menus/dinner', function() {
     echo $view->render('views/dinner-menu.html');
 });
 
+// Order form part 1
+$f3->route('GET|POST /order1', function($f3) {
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        echo "<p>you got here using POST</p>";
+
+        // Get the data from the POST array
+        $food = $_POST['food'];
+        $meal = $_POST['meal'];
+
+
+        // If the data is valid
+        if (true) {
+            $f3->set('SESSION.food', $food);
+            $f3->set('SESSION.meal', $meal);
+        }
+    } else {
+        echo "<p>you got here using GET</p>";
+    }
+    $view = new Template();
+    echo $view->render('views/order1.html');
+});
+
+// Order form part 2
+$f3->route('GET|POST /order2', function() {
+    // Render a view page
+    $view = new Template();
+    echo $view->render('views/order2.html');
+});
+
 // Run Fat-Free
 $f3->run();
