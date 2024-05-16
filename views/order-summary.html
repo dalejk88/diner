@@ -1,0 +1,11 @@
+<include href="views/header.html"></include>
+<body>
+
+<div class="container">
+    <h1>Thank you for ordering {{ @SESSION.order->getFood() }}
+        for {{ @SESSION.order->getMeal() }}!</h1>
+    <p>Condiments: {{ @SESSION.order->getCondiments() }}</p>
+
+</div>
+</body>
+</html>
