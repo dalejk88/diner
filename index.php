@@ -9,107 +9,62 @@ error_reporting(E_ALL);
 // Require the necessary files
 require_once ('vendor/autoload.php');
 
-// Instantiate the F3 Base class
+// Instantiate the F3 Base class (the router)
 $f3 = Base::instance();
+$con = new Controller($f3);
 
 // Define a default route
+// https://tostrander.greenriverdev.com/328/hello-fat-free/
 $f3->route('GET /', function() {
-    // Render a view page
-    $view = new Template();
-    echo $view->render('views/home.html');
+    $GLOBALS['con']->home();
 });
 
-// Define a breakfast-menu route
+// Breakfast menu
 $f3->route('GET /menus/breakfast', function() {
-    // Render a view page
-    $view = new Template();
-    echo $view->render('views/breakfast-menu.html');
+    $GLOBALS['con']->breakfast();
 });
 
-// Define a lunch-menu route
+// Lunch menu
 $f3->route('GET /menus/lunch', function() {
+    //echo '<h1>My Breakfast Menu</h1>';
+
     // Render a view page
     $view = new Template();
     echo $view->render('views/lunch-menu.html');
 });
 
-// Define a dinner-menu route
+// Dinner menu
 $f3->route('GET /menus/dinner', function() {
+    //echo '<h1>My Breakfast Menu</h1>';
+
     // Render a view page
     $view = new Template();
     echo $view->render('views/dinner-menu.html');
 });
 
-// Order form part 1
-$f3->route('GET|POST /order1', function($f3) {
-    $food = "";
-    $meal = "";
+// Order Summary
+$f3->route('GET /summary', function($f3) {
 
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        echo "<p>you got here using POST</p>";
+    // Write data to database
 
-        // Get the data from the POST array
-        if (Validate::validFood($_POST['food'])){
-            $food = $_POST['food'];
-        } else {
-            $f3->set('errors["food"]', 'Please enter a food');
-        }
-        if (isset($_POST['meal']) and Validate::validMeal($_POST['meal'])){
-            $meal = $_POST['meal'];
-        } else {
-            $meal = "Lunch";
-        }
 
-        $meal = isset($_POST['meal']) ? $_POST["meal"] : "";
-
-        // Add the data to the session array
-        $order = new Order($food, $meal);
-        $f3->set('SESSION.order', $order);
-
-        // If there are no errors, send the user to the next form
-        if (empty($f3->get('errors'))) {
-            $f3->reroute("order2");
-        }
-    }
-
-    $meals = DataLayer::getMeals();
-    $f3->set('meals', $meals);
-
-    $view = new Template();
-    echo $view->render('views/order1.html');
-});
-
-// Order form part 2
-$f3->route('GET|POST /order2', function($f3) {
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        if (isset($_POST["conds"])) {
-            $condiments = implode($_POST["conds"]);
-        }
-        if (true) {
-            $f3->get('SESSION.order')->setCondiments($condiments);
-
-            // Send the user to the next page
-            $f3->reroute("order-summary");
-        }
-    } else {
-
-    }
-    $condiments = DataLayer::getCondiments();
-    $f3->set('condiments', $condiments);
-    
-    // Render a view page
-    $view = new Template();
-    echo $view->render('views/order2.html');
-});
-
-// Define an order-summary route
-$f3->route('GET /order-summary', function($f3) {
     // Render a view page
     $view = new Template();
     echo $view->render('views/order-summary.html');
+
+    //var_dump ( $f3->get('SESSION') );
     session_destroy();
 });
 
+// Order Form Part I
+$f3->route('GET|POST /order1', function() {
+    $GLOBALS['con']->order1();
+});
+
+// Order Form Part II
+$f3->route('GET|POST /order2', function() {
+    $GLOBALS['con']->order2();
+});
 
 // Run Fat-Free
 $f3->run();
